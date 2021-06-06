@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+spec:
+  replicas: {{.Values.replicaCount}} 
+  selector:
+    matchLabels:
+      app: CICD
+  template:
+    metadata:
+      labels:
+        app: CICD
+    spec:
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+                httpGet:
+                  path: /login
+                  port: 8080
+                initialDelaySeconds: 5
+                periodSeconds: 3
